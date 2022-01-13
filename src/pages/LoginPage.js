@@ -1,6 +1,7 @@
 import React from "react";
 import makeToast from "../Toaster";
 import axios from "axios";
+import { withRouter } from "react-router-dom";
 // import { Redirect } from "react-router-dom";
 
 const LoginPage = () => {
@@ -18,6 +19,7 @@ const LoginPage = () => {
         localStorage.setItem("CC_Token", response.data.token);
         // <Redirect to="/Dashboard" />;
         window.location.href = "/Dashboard";
+        props.setupSocket();
       })
       .catch((err) => makeToast("error", err.response.data.message));
   };
@@ -50,4 +52,4 @@ const LoginPage = () => {
     </div>
   );
 };
-export default LoginPage;
+export default withRouter(LoginPage);

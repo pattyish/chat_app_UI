@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const DashboardPage = () => {
+const DashboardPage = (props) => {
   const [chatrooms, setChatrooms] = React.useState([]);
   const getChatrooms = () => {
     axios
@@ -11,8 +11,14 @@ const DashboardPage = () => {
           authorization: `Bearer ${localStorage.getItem("CC_Token")}`,
         },
       })
-      .then((response) => setChatrooms(response.data))
-      .catch((err) => console.log(err));
+      .then((response) => {
+          console.log(response.data.chatrooms)
+        setChatrooms(response.data.chatrooms);
+      })
+      .catch((err) => {
+        console.log(`Bearer ${localStorage.getItem("CC_Token")}`);
+        setTimeout(getChatrooms, 3000);
+      });
   };
   React.useEffect(() => {
     getChatrooms();
@@ -30,15 +36,17 @@ const DashboardPage = () => {
             placeholder="Chatter Box Nepal"
           />
         </div>
-        <button>Create Chatroom</button>
-        <div className="chatrooms">
+      </div>
+      <button>Create Chatroom</button>
+      <div className="chatrooms">
         {chatrooms.map((chatroom) => (
-            <div key = {chatroom._id} className="chatroom">
-              <div>{chatroom.name}</div>
-              <Link to={`/chatroom/${chatroom._id}`}><div className="join">Join</div></Link>
-            </div>
-          ))}
-        </div>
+          <div key={chatroom._id} className="chatroom">
+            <div>{chatroom.name}</div>
+            <Link to={`/chatroom/${chatroom._id}`}>
+              <div className="join">Join</div>
+            </Link>
+          </div>
+        ))}
       </div>
     </div>
   );
